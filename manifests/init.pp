@@ -203,10 +203,20 @@ class candlepin (
   contain ::candlepin::service
 
   class { '::candlepin::repo': } ->
-  class { '::candlepin::install': } ~>
-  class { '::candlepin::config':  } ~>
-  class { "::candlepin::database::${::candlepin::db_type}": } ~>
-  class { '::candlepin::qpid': } ~>
+  class { '::candlepin::install': }
+  class { '::candlepin::config':  }
+  class { "::candlepin::database::${::candlepin::db_type}": }
+  class { '::candlepin::qpid': }
+
+  Class['::candlepin::install']~>
+  Class["::candlepin::database::${::candlepin::db_type}"]
+
+  Class[
+    '::candlepin::install',
+    '::candlepin::config',
+    "::candlepin::database::${::candlepin::db_type}",
+    '::candlepin::qpid',
+  ] ~>
   Class['candlepin::service']
 
 }
